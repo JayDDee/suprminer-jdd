@@ -344,24 +344,24 @@ extern "C" int scanhash_x16rt(int thr_id, struct work* work, uint32_t max_nonce,
 	}
 
 	uint32_t _ALIGN(64) endiandata[20];
-   uint32_t _ALIGN(64) timeHash[8];
+        uint32_t _ALIGN(64) timeHash[8];
 
 	for (int k = 0; k < 19; k++)
 		be32enc(&endiandata[k], pdata[k]);
 
-	uint32_t ntime = endiandata[17];
-	if (s_ntime != ntime)
+	uint32_t masked_ntime = endiandata[17] & 0xffffff80;
+	if ( s_ntime  != masked_ntime )
 	{
-      x16rt_getTimeHash( ntime, &timeHash );
-      x16rt_getAlgoString( &timeHash[0], hashOrder );
-//		getAlgoString(&endiandata[1], hashOrder);
-		s_ntime = ntime;
-		if (thr_id==0)
-		{
-			applog(LOG_INFO, "hash order %s (%08x)", hashOrder, ntime);
-			cudaDeviceSynchronize();
-		}
-	}
+           x16rt_getTimeHash( masked_ntime, &timeHash );
+           x16rt_getAlgoString( &timeHash[0], hashOrder );
+           s_ntime = masked_ntime;
+           if ( !(thr_id || opt_quiet) )
+           {
+              applog( LOG_INFO, "hash order %s (%08x)", hashOrder,
+			      endiandata[17] );
+              cudaDeviceSynchronize();
+           }
+        }
 
 	uint32_t default_throughput=1<<19;
 	bool splitsimd = true;
