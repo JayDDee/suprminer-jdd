@@ -1,4 +1,4 @@
-AC_INIT([suprminer-jdd], [git2], [], [suprminer-jdd], [https://github.com/jayddee/suprminer-jdd])
+AC_INIT([suprminer-jdd], [git3], [], [suprminer-jdd], [https://github.com/jayddee/suprminer-jdd])
 
 AC_PREREQ([2.59c])
 AC_CANONICAL_SYSTEM

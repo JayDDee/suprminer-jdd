@@ -78,7 +78,7 @@ ccminer_SOURCES	= elist.h miner.h compat.h \
 			  x16r/x16s.cu x16r/x16r.cu x16r/x16rv2.cu x16r/cuda_x16_echo512.cu x16r/cuda_x16_fugue512.cu x16r/cuda_x16_whirlpool.cu sph/tiger.c \
 			  x16r/cuda_x16_shabal512.cu x16r/cuda_x16_simd512_80.cu \
 			  x16r/cuda_x16_shavite512.cu \
-			  x16rv2/cuda_tiger192_x16rv2.cu x16r/x16rt.cu \
+			  x16rv2/cuda_tiger192_x16rv2.cu \
 			  x17/x17.cu x17/hmq17.cu x17/cuda_x17_haval256.cu x17/cuda_x17_sha512.cu \
 			  x11/phi.cu x11/cuda_streebog_maxwell.cu \
 			  x11/c11.cu x11/s3.cu x11/sib.cu x11/veltor.cu x11/cuda_streebog.cu 
@@ -115,12 +115,19 @@ endif
 ccminer_LDADD += -lcuda
 
 nvcc_ARCH :=
-#nvcc_ARCH += -gencode=arch=compute_86,code=\"sm_86,compute_86\" # CUDA 11 req.
-nvcc_ARCH += -gencode=arch=compute_75,code=\"sm_75,compute_75\" # CUDA 10 req.
-nvcc_ARCH += -gencode=arch=compute_70,code=\"sm_70,compute_70\" # CUDA 9.1
-nvcc_ARCH += -gencode=arch=compute_61,code=\"sm_61,compute_61\" # CUDA 8
+# Ampere: RTX-30xx, CUDA >= 11
+#nvcc_ARCH += -gencode=arch=compute_86,code=\"sm_86,compute_86\"
+# Turing: RTX-20xx, GTX-16xx, CUDA >= 10
+nvcc_ARCH += -gencode=arch=compute_75,code=\"sm_75,compute_75\"
+# Quadro GV100: CUDA >= 9.1
+#nvcc_ARCH += -gencode=arch=compute_70,code=\"sm_70,compute_70\"
+# Pascal: GTX-10xx, CUDA >= 8
+nvcc_ARCH += -gencode=arch=compute_61,code=\"sm_61,compute_61\"
+# Maxwell GTX-9xx
 nvcc_ARCH += -gencode=arch=compute_52,code=\"sm_52,compute_52\"
-nvcc_ARCH += -gencode=arch=compute_50,code=\"sm_50,compute_50\"
+# Maxwell: GTX-750xx
+#nvcc_ARCH += -gencode=arch=compute_50,code=\"sm_50,compute_50\"
+# Kepler: GTX-7xx  CUDA < 11
 #nvcc_ARCH += -gencode=arch=compute_35,code=\"sm_35,compute_35\"
 #nvcc_ARCH += -gencode=arch=compute_30,code=\"sm_30,compute_30\"
 
